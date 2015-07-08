@@ -19,6 +19,7 @@
 			background-image: url('images/moleBG.jpg');
 			background-size: 100%;
 			z-index: -999;
+			cursor: url('images/mallet.png') 15 45,auto;
 		}
 		.moleHole{
 			width: 300px;
@@ -47,12 +48,18 @@
 			width: 100%;
 			height: 100%;
 		}
+		.follow{
+			position: absolute;
+
+		}
 	</style>
 </head>
 <body>
 	<div class="center">
-			<h1>Whacky Mole</h1>
-			<button id="start" class="start">Start</button>
+		<h1>Whacky Mole</h1>
+		<button id="start" class="start">Start</button><br>
+        <input type="text" id="round" class="whatRound" readonly="">
+        <input type="text" id="userTimeLimit" class="timeLimit" readonly="">
 		<div id="gameBoard">
 			<img class="stretch" src="images/moleBG.jpg">
 			<div class="moleRow" id="row1">
@@ -74,29 +81,91 @@
 	</div>
 
 	<script type="text/javascript">
+	"use strict";
 		$('#start').on('click', start);
+		$('#start').on('click', reset);
+		$('#gameBoard').mousedown(function(){
+			$( this ).css({
+		    	"cursor": "url('images/mallet2.png')15 45,auto"
+		    });
+		});
+		$('#gameBoard').mouseup(function(){
+			$( this ).css({
+		    	"cursor": "url('images/mallet.png')15 45,auto"
+		    });
+		});
+
 		var intS;
+		var moleCounter = 1;
+		var timer1 = 990;
+		var timer2 = 1001;
+		var userTime;
+		var intT;
+		var intS;
+		function timeLimit(){
+			intT = setInterval(function(){
+				$('#userTimeLimit').val('Time left: ' + userTime)
+				userTime = userTime - 1;
+				check();
+			},1000);
+		}	
+		function start(){
+			reset();
+			gamePlay();
+			timeLimit();
+		}
+		function gamePlay(){
+			check();
+			$('#round').val("Round: " + moleCounter);
+			if (moleCounter % 2	 === 0){
+				speedUp();
+			}
+			disable();
+			enable();
+			clearInterval(intS);
+			intS = setInterval(function(){
+				popUp();
+			},timer2);
+		}
 		function popUp(){	
 			var random = Math.floor(Math.random() * 9);
         	$('#'+random).removeClass('hidden');
         	setTimeout(function(){
 	        	$('#'+random).addClass('hidden');
-        	},990)
+        	},timer1);
 	    }
-		function start(){
-			enable();
-			clearInterval(intS);
-			intS = setInterval(function(){
-				popUp();
-			}, 1001);
-		}
 		function enable(){
 			$('.stayStill').on('click', function(){
-				console.log("hit!");
+				check();
+				$(this).addClass('hidden');
+				moleCounter++;
+				$('#round').val("Round: " + moleCounter);
+				gamePlay();
 			});
 		}
+		function disable(){
+			$('.stayStill').off('click');
+		}
+		function speedUp(){
+			timer1 = timer1 - 50;
+			timer2 = timer2 - 50;
+			console.log('changing speed');
+		}
+		function reset(){
+			timer1 = 990;
+			timer2 = 1001;
+			moleCounter = 1;
+			userTime = 60;
+		}
+		function check(){
+			if (userTime <= -1){
+				clearInterval(intS);
+				clearInterval(intT);
+				disable();
+				alert('Game over! Try again!');
 
-
+			}
+		}
 
 		
 
