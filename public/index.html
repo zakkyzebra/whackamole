@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>WhackyMole</title>
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<style type="text/css">
+		body{
+			font-family: "Comic Sans MS";
+		}
+		#gameBoard{
+			text-align: center;
+			margin-left: auto;
+			margin-right: auto;
+			width: 1000px;
+			height: 1000px;
+			border: 1px solid black;
+			background-image: url('images/moleBG.jpg');
+			background-size: 100%;
+			z-index: -999;
+		}
+		.moleHole{
+			width: 300px;
+			height: 300px;
+			display: inline-block;
+		}
+		.hidden{
+			opacity: 0;
+		}
+		.start{
+			font-family: "Comic Sans MS";
+			font-size: 40px;
+			width: 500px;
+		}
+		.moleRow{
+			height: 300px;
+		}
+		.stayStill{
+			margin-top: -2250px;
+			background-color: #562712;
+		}
+		.center{
+			text-align: center;
+		}
+		.stretch{
+			width: 100%;
+			height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="center">
+			<h1>Whacky Mole</h1>
+			<button id="start" class="start">Start</button>
+		<div id="gameBoard">
+			<img class="stretch" src="images/moleBG.jpg">
+			<div class="moleRow" id="row1">
+				<div class="moleHole"><img class="hidden stayStill" id="0" src="images/1.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="1" src="images/2.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="2" src="images/3.jpg"></div>
+			</div>
+			<div class="moleRow" id="row2">
+				<div class="moleHole"><img class="hidden stayStill" id="3" src="images/4.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="4" src="images/5.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="5" src="images/6.jpg"></div>
+			</div>
+			<div class="moleRow" id="row3">	
+				<div class="moleHole"><img  class="hidden stayStill" id="6" src="images/7.jpg"></div>
+				<div class="moleHole"><img  class="hidden stayStill" id="7" src="images/8.jpg"></div>
+				<div class="moleHole"><img  class="hidden stayStill" id="8" src="images/9.jpg"></div>
+			</div >
+		</div>
+	</div>
+
+	<script type="text/javascript">
+		$('#start').on('click', start);
+		var intS;
+		function popUp(){	
+			var random = Math.floor(Math.random() * 9);
+        	$('#'+random).removeClass('hidden');
+        	setTimeout(function(){
+	        	$('#'+random).addClass('hidden');
+        	},990)
+	    }
+		function start(){
+			enable();
+			clearInterval(intS);
+			intS = setInterval(function(){
+				popUp();
+			}, 1001);
+		}
+		function enable(){
+			$('.stayStill').on('click', function(){
+				console.log("hit!");
+			});
+		}
+
+
+
+		
+
+
+	</script>
+
+
+</body>
+</html>
+
+
+
+
+
