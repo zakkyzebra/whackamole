@@ -4,6 +4,7 @@
 	<title>WhackyMole</title>
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/magic.min.css">
 
 	<style type="text/css">
 		body{
@@ -54,40 +55,44 @@
 	</style>
 </head>
 <body>
+	<!--DIV TO HELP CENTER GAME -->
 	<div class="center">
+		<!--TITLE AT TOP OF PAGE -->
 		<h1>Whacky Mole</h1>
+		<!--START BUTTON -->
 		<button id="start" class="start">Start</button><br>
+		<!--SCORE HOLDER -->
         <input type="text" id="round" class="whatRound" readonly="">
+        <!--TIMER -->
         <input type="text" id="userTimeLimit" class="timeLimit" readonly="">
 		<div id="gameBoard">
+			<!--BACKGROUND IMAGE (MOLE HOLES) -->
 			<img class="stretch" src="images/moleBG.jpg">
-			<div class="moleRow" id="row1">
-				<div class="moleHole"><img class="hidden stayStill" id="0" src="images/1.jpg"></div>
-				<div class="moleHole"><img class="hidden stayStill" id="1" src="images/2.jpg"></div>
-				<div class="moleHole"><img class="hidden stayStill" id="2" src="images/3.jpg"></div>
-			</div>
-			<div class="moleRow" id="row2">
-				<div class="moleHole"><img class="hidden stayStill" id="3" src="images/4.jpg"></div>
-				<div class="moleHole"><img class="hidden stayStill" id="4" src="images/5.jpg"></div>
-				<div class="moleHole"><img class="hidden stayStill" id="5" src="images/6.jpg"></div>
-			</div>
-			<div class="moleRow" id="row3">	
-				<div class="moleHole"><img class="hidden stayStill" id="6" src="images/7.jpg"></div>
-				<div class="moleHole"><img class="hidden stayStill" id="7" src="images/8.jpg"></div>
-				<div class="moleHole"><img class="hidden stayStill" id="8" src="images/9.jpg"></div>
-			</div >
+			<!--DIVS THAT HOLD THE MOLE IMAGES -->
+			<div class="moleHole"><img class="hidden stayStill" id="0" src="images/0.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="1" src="images/1.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="2" src="images/2.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="3" src="images/3.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="4" src="images/4.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="5" src="images/5.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="6" src="images/6.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="7" src="images/7.jpg"></div>
+			<div class="moleHole"><img class="hidden stayStill" id="8" src="images/8.jpg"></div>
 		</div>
 	</div>
 	<script type="text/javascript">
-	"use strict";
+		//PREVENTS DRAGGING OF IMAGES, MAKES FOR SMOOTHER GAMEPLAY
 		$('img').on('dragstart', function(event) { event.preventDefault(); });
+		//LETS THE START BUTTON RUN FUNCTIONS
 		$('#start').on('click', start);
 		$('#start').on('click', reset);
+		//CURSOR IMAGE WHEN THE CLICK IS DOWN
 		$('#gameBoard').mousedown(function(){
 			$( this ).css({
-		    	"cursor": "url('images/mallet2.png')15 45,auto"
+		    	"cursor": "url('images/mallet2.jpg')15 45,auto"
 		    });
 		});
+		//CURSOR IMAGE WHEN THE CLICK IS UP
 		$('#gameBoard').mouseup(function(){
 			$( this ).css({
 		    	"cursor": "url('images/mallet.png')15 45,auto"
@@ -99,19 +104,22 @@
 		var userTime;
 		var intT;
 		var intS;
+		//TIMER FUNCTION, REMOVES A VALUE OF 1 EVERY 1000MS
 		function timeLimit(){
 			intT = setInterval(function(){
 				$('#userTimeLimit').val('Time left: ' + userTime)
 				userTime = userTime - 1;
 				check();
 			},1000);
-		}	
+		}
+		//STARTS THE GAME, CLEARS TIME INTERVAL, RESETS VARIABLES, AND STARTS THE TIMER
 		function start(){
 			clearInterval(intT);
 			reset();
 			gamePlay();
 			timeLimit();
 		}
+		//CHECKS TIMER, SETS ROUND#, SPEEDS UP IF COUNTER HAS INCREASED, RESETS CLICK FUNCTION, RESETS MOLE INTERVAL
 		function gamePlay(){
 			check();
 			$('#round').val("Round: " + moleCounter);
@@ -125,6 +133,7 @@
 				popUp();
 			},timer2);
 		}
+		//PICKS A RANDOM NUMBER, POPS UP THE IMAGE WITH THE SAME ID NUMBER
 		function popUp(){	
 			var random = Math.floor(Math.random() * 9);
         	$('#'+random).removeClass('hidden');
@@ -132,31 +141,39 @@
 	        	$('#'+random).addClass('hidden');
         	},timer1);
 	    }
+	    //ENABLES YOU TO CLICK THE MOLE, PLAYS A RANDOM SOUND IN THE VAR AUDIO, CHECKS TO SEE IF THE TIMER IS UP, FANCY CSS, ADDS ONTO SCORE UPON SUCCESSFUL CLICK
 		function enable(){
 			$('.stayStill').on('click', function(){
 				var random = Math.floor(Math.random() * 4);
 				audio[random].play();
 				check();
-				$(this).addClass('hidden');
+				$(this).addClass('magictime foolishOut');
+				setTimeout(function(){
+					$('.magictime').removeClass('magictime foolishOut');
+				},timer2)
 				moleCounter++;
 				$('#round').val("Round: " + moleCounter);
 				gamePlay();
 			});
 		}
+		//DISABLES CLICK FUNCTION
 		function disable(){
 			$('.stayStill').off('click');
 		}
+		//SPEEDS UP THE POPUP FUNCTION
 		function speedUp(){
 			timer1 = timer1 - 50;
 			timer2 = timer2 - 50;
 			console.log('changing speed');
 		}
+		//RESETS VARS
 		function reset(){
 			timer1 = 990;
 			timer2 = 1001;
 			moleCounter = 1;
 			userTime = 60;
 		}
+		//CHECKS TO SEE IF YOURE TIME IS UP
 		function check(){
 			if (userTime <= -1){
 				clearInterval(intS);
@@ -165,6 +182,7 @@
 				alert('Game over! Try again!');
 			}
 		}
+		//ARRAY OF NOISES WHEN HIT
 		var audio = [
 						new Audio('audio/grunt0.mp3'),
 						new Audio('audio/grunt1.mp3'),
@@ -172,6 +190,7 @@
 						new Audio('audio/grunt3.mp3'),
 						new Audio('audio/grunt4.mp3')
 					]
+		//HUEHUEHUEHUEHUEHUEHUEHUEHUEHUE
 		$(document).ready(function() {
 	        var input = [];
 	        var code = [65,83,68,70,71,72,74,75,76,186,222,13];
@@ -187,15 +206,15 @@
 	            	$(".stayStill").attr("src","images/7.jpg");
 	            	console.log('konami');
 	    		}else if(input.toString() == code.toString() && (onlyOnce == true)){
-	    			$("#0").attr("src","images/1.jpg");
-	    			$("#1").attr("src","images/2.jpg");
-	    			$("#2").attr("src","images/3.jpg");
-	    			$("#3").attr("src","images/4.jpg");
-	    			$("#4").attr("src","images/5.jpg");
-	    			$("#5").attr("src","images/6.jpg");
-	    			$("#6").attr("src","images/7.jpg");
-	    			$("#7").attr("src","images/8.jpg");
-	    			$("#8").attr("src","images/9.jpg");
+	    			$("#0").attr("src","images/0.jpg");
+	    			$("#1").attr("src","images/1.jpg");
+	    			$("#2").attr("src","images/2.jpg");
+	    			$("#3").attr("src","images/3.jpg");
+	    			$("#4").attr("src","images/4.jpg");
+	    			$("#5").attr("src","images/5.jpg");
+	    			$("#6").attr("src","images/6.jpg");
+	    			$("#7").attr("src","images/7.jpg");
+	    			$("#8").attr("src","images/8.jpg");
 	    			onlyOnce = false;
 	    		}
 	        });
