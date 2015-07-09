@@ -50,7 +50,6 @@
 		}
 		.follow{
 			position: absolute;
-
 		}
 	</style>
 </head>
@@ -73,15 +72,15 @@
 				<div class="moleHole"><img class="hidden stayStill" id="5" src="images/6.jpg"></div>
 			</div>
 			<div class="moleRow" id="row3">	
-				<div class="moleHole"><img  class="hidden stayStill" id="6" src="images/7.jpg"></div>
-				<div class="moleHole"><img  class="hidden stayStill" id="7" src="images/8.jpg"></div>
-				<div class="moleHole"><img  class="hidden stayStill" id="8" src="images/9.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="6" src="images/7.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="7" src="images/8.jpg"></div>
+				<div class="moleHole"><img class="hidden stayStill" id="8" src="images/9.jpg"></div>
 			</div >
 		</div>
 	</div>
-
 	<script type="text/javascript">
 	"use strict";
+		$('img').on('dragstart', function(event) { event.preventDefault(); });
 		$('#start').on('click', start);
 		$('#start').on('click', reset);
 		$('#gameBoard').mousedown(function(){
@@ -94,8 +93,6 @@
 		    	"cursor": "url('images/mallet.png')15 45,auto"
 		    });
 		});
-
-		var intS;
 		var moleCounter = 1;
 		var timer1 = 990;
 		var timer2 = 1001;
@@ -110,6 +107,7 @@
 			},1000);
 		}	
 		function start(){
+			clearInterval(intT);
 			reset();
 			gamePlay();
 			timeLimit();
@@ -136,6 +134,8 @@
 	    }
 		function enable(){
 			$('.stayStill').on('click', function(){
+				var random = Math.floor(Math.random() * 4);
+				audio[random].play();
 				check();
 				$(this).addClass('hidden');
 				moleCounter++;
@@ -163,20 +163,46 @@
 				clearInterval(intT);
 				disable();
 				alert('Game over! Try again!');
-
 			}
 		}
-
+		var audio = [
+						new Audio('audio/grunt0.mp3'),
+						new Audio('audio/grunt1.mp3'),
+						new Audio('audio/grunt2.mp3'),
+						new Audio('audio/grunt3.mp3'),
+						new Audio('audio/grunt4.mp3')
+					]
+		$(document).ready(function() {
+	        var input = [];
+	        var code = [65,83,68,70,71,72,74,75,76,186,222,13];
+	        var onlyOnce = false;
+	        $("#hiddenLives").hide();
+	        $(document).keydown(function(keyEvent) {
+	            input.push(keyEvent.keyCode);
+	          	if (input.length > code.length) {
+	                input.shift(); 
+	          	} 
+	            if ( input.toString() == code.toString() && (onlyOnce == false) ) {
+	            	onlyOnce = true;
+	            	$(".stayStill").attr("src","images/7.jpg");
+	            	console.log('konami');
+	    		}else if(input.toString() == code.toString() && (onlyOnce == true)){
+	    			$("#0").attr("src","images/1.jpg");
+	    			$("#1").attr("src","images/2.jpg");
+	    			$("#2").attr("src","images/3.jpg");
+	    			$("#3").attr("src","images/4.jpg");
+	    			$("#4").attr("src","images/5.jpg");
+	    			$("#5").attr("src","images/6.jpg");
+	    			$("#6").attr("src","images/7.jpg");
+	    			$("#7").attr("src","images/8.jpg");
+	    			$("#8").attr("src","images/9.jpg");
+	    			onlyOnce = false;
+	    		}
+	        });
+	    });
 		
-
-
 	</script>
 
 
 </body>
 </html>
-
-
-
-
-
